@@ -1,0 +1,5 @@
+services:
+- type: web
+  name: express-app
+  buildCommand: npm install
+  startCommand: npm start
