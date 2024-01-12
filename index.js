@@ -7,14 +7,16 @@ const port = 5000;
 
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 // Handling GET /hello request 
-app.get("/hello", (req, res, next) => { 
-    // res.send("This is the hello response"); 
-      // Assuming the data you want to send is in the request body
-  const postData = req.body;
+app.post("/receive-data", (req, res, next) => { 
+const postData = req.body;
 
-  // Replace 'https://example.com/api' with the actual URL of the external API
-  const apiUrl = 'https://dummy.restapiexample.com/api/v1/employees';
+const hostname = 'blr1.blynk.cloud';
+const path = '/external/api/update';
+const queryParams = `token=epNWp5yKhqckSi01-6hZGfsi-_7SJblG&${postData.pinKey}=${postData.pinValue}`;
+
+const apiUrl = `https://${hostname}${path}?${queryParams}`;
 
   // Make a POST request to the external API
   axios.get(apiUrl)
@@ -31,7 +33,7 @@ app.get("/hello", (req, res, next) => {
 }) 
 
 // Endpoint to receive data from Wokwi simulator
-app.post('/receive-data', (req, res) => {
+app.post('/test', (req, res) => {
     const dataFromSimulator = req.body;
     console.log('Received data from Wokwi simulator:', dataFromSimulator);
 
