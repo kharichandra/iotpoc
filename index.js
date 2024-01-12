@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const axios = require('axios');
 
 const app = express();
 const port = 5000;
@@ -8,7 +9,25 @@ const port = 5000;
 app.use(bodyParser.json());
 // Handling GET /hello request 
 app.get("/hello", (req, res, next) => { 
-    res.send("This is the hello response"); 
+    // res.send("This is the hello response"); 
+      // Assuming the data you want to send is in the request body
+  const postData = req.body;
+
+  // Replace 'https://example.com/api' with the actual URL of the external API
+  const apiUrl = 'https://dummy.restapiexample.com/api/v1/employees';
+
+  // Make a POST request to the external API
+  axios.get(apiUrl)
+    .then(response => {
+      console.log('API Response:', response.data);
+      // Handle the API response as needed
+      res.status(200).json({ message: 'Success' });
+    })
+    .catch(error => {
+      console.error('Error:', error.message);
+      // Handle errors
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
 }) 
 
 // Endpoint to receive data from Wokwi simulator
