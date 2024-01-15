@@ -18,7 +18,9 @@ app.use(limiter);
 // Handling GET /hello request 
 app.post("/receive-data", (req, res, next) => { 
 const postData = req.body;
-
+if(postData.pinKey == "V4"){
+    return res.status(400).send('Today being a holiday, requests are not permitted.');
+}
 const hostname = 'blr1.blynk.cloud';
 const path = '/external/api/update';
 const queryParams = `token=epNWp5yKhqckSi01-6hZGfsi-_7SJblG&${postData.pinKey}=${postData.pinValue}`;
