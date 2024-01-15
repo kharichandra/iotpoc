@@ -18,7 +18,7 @@ app.use(limiter);
 // Handling GET /hello request 
 app.post("/receive-data", (req, res, next) => { 
 const postData = req.body;
-if(postData.pinKey == "V4"){
+if(postData.pinKey == "V2"){
     return res.status(400).send('Today being a holiday, requests are not permitted.');
 }
 const hostname = 'blr1.blynk.cloud';
