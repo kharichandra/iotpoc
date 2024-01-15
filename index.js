@@ -1,13 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const rateLimit = require('express-rate-limit');
 const axios = require('axios');
 
 const app = express();
 const port = 5000;
+const limiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 5, // limit each IP to 10 requests per windowMs
+  });
 
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// Apply rate limiting middleware to all routes
+app.use(limiter);
 // Handling GET /hello request 
 app.post("/receive-data", (req, res, next) => { 
 const postData = req.body;
