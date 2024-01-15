@@ -54,7 +54,6 @@ app.post("/receive-data", async (req, res, next) => {
         .status(400)
         .send("Today being a holiday, requests are not permitted.");
     }
-    res.json(result.rows);
   } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).json({ error: "Internal Server Error" });
