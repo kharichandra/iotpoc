@@ -8,7 +8,7 @@ const app = express();
 const port = 5000;
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 15, // limit each IP to 10 requests per windowMs
+  max: 10, // limit each IP to 10 requests per windowMs
 });
 
 const connectionString =
@@ -28,10 +28,10 @@ const anomalyThreshold = 2;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // Apply rate limiting middleware to all routes
-app.use(limiter);
+// app.use(limiter);
 // Handling GET /hello request
 
-app.use("/receive-data", (req, res, next) => {
+app.use("/receive-data",limiter, (req, res, next) => {
   // Increment the request count for "receive-data"
   const postData = req.body;
   if (postData.pinKey === "V3") {
