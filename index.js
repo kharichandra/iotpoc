@@ -8,19 +8,9 @@ const app = express();
 const port = 5000;
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 5, // limit each IP to 10 requests per windowMs
+  max: 15, // limit each IP to 10 requests per windowMs
 });
 
-// Replace these values with your actual database credentials
-// const pool = new Pool({
-//     user: 'iotdata_user',
-//     host: 'dpg-cmii6of109ks739m3cng-a.oregon-postgres.render.com',
-//     database: 'iotdata',
-//     password: 'RQoG061drVVToSVrSfvhlWugljwRZTFE',
-//     port: 5432, // Default PostgreSQL port
-//   });
-
-// const connectionString = 'postgres://username:password@host:port/database?sslmode=require';
 const connectionString =
   "postgres://iotdata_user:RQoG061drVVToSVrSfvhlWugljwRZTFE@dpg-cmii6of109ks739m3cng-a.oregon-postgres.render.com/iotdata?sslmode=require";
 
@@ -41,17 +31,26 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(limiter);
 // Handling GET /hello request
 
-app.use('/receive-data', (req, res, next) => {
+app.use("/receive-data", (req, res, next) => {
   // Increment the request count for "receive-data"
   const postData = req.body;
-  if(postData.pinKey === "V3"){
-  endpoint1RequestCount++;
+  if (postData.pinKey === "V3") {
+    endpoint1RequestCount++;
+  } else {
+    endpoint1RequestCount = 0;
   }
 
   // Check for anomalies for "receive-data"
   if (endpoint1RequestCount > anomalyThreshold) {
-    console.log('Potential anomaly detected for receive-data! Too many requests.');
-    return res.status(429).json({ message: "Potential anomaly detected for receive-data! Too many requests." });
+    console.log(
+      "Potential anomaly detected for receive-data! Too many requests."
+    );
+    return res
+      .status(430)
+      .json({
+        message:
+          "Potential anomaly detected for Pin Key :V3 Too many requests.",
+      });
     // You can take further actions here, such as logging the incident or blocking the IP.
   }
 
