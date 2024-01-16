@@ -28,12 +28,36 @@ const pool = new Pool({
   connectionString: connectionString,
 });
 
+// Request count for the specific endpoint
+let endpoint1RequestCount = 0;
+
+// Threshold for anomaly detection
+const anomalyThreshold = 2;
+
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // Apply rate limiting middleware to all routes
 app.use(limiter);
 // Handling GET /hello request
+
+app.use('/receive-data', (req, res, next) => {
+  // Increment the request count for "receive-data"
+  const postData = req.body;
+  if(postData.pinKey === "V3"){
+  endpoint1RequestCount++;
+  }
+
+  // Check for anomalies for "receive-data"
+  if (endpoint1RequestCount > anomalyThreshold) {
+    console.log('Potential anomaly detected for receive-data! Too many requests.');
+    return res.status(429).json({ message: "Potential anomaly detected for receive-data! Too many requests." });
+    // You can take further actions here, such as logging the incident or blocking the IP.
+  }
+
+  next();
+});
+
 app.post("/receive-data", async (req, res, next) => {
   const postData = req.body;
   try {
