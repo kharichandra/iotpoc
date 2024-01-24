@@ -47,10 +47,7 @@ app.use("/receive-data",limiter, (req, res, next) => {
     );
     return res
       .status(430)
-      .json({
-        message:
-          "Potential anomaly detected for Pin Key :V3 Too many requests.",
-      });
+      .send("Potential anomaly detected for Pin Key :V3 Too many requests.",);
     // You can take further actions here, such as logging the incident or blocking the IP.
   }
 
